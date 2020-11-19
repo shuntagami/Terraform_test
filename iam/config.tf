@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "tfstate-shuntagami"
-    key = "terraform_test/iam/terraform.tfstate"
+    key = "Terraform_test/iam/terraform.tfstate"
     region = "ap-northeast-1"
   }
 }
