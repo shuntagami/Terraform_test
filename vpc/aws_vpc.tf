@@ -1,6 +1,6 @@
 resource "aws_vpc" "vpc" {
   tags = {
-    Name = "test_vpc"
+    Name = "bike_app_vpc"
   }
   cidr_block           = "10.0.0.0/21"
   instance_tenancy     = "default"

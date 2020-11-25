@@ -1,25 +1,27 @@
 [
 	{
-		"name": "sample-webapp",
-		"image": "706169056500.dkr.ecr.ap-northeast-1.amazonaws.com/sample-image:latest",
-		"cpu": 333,
-		"memoryReservation": 600,
-		"essential": true,
+		"name": "nginx",
+		"image": "706169056500.dkr.ecr.ap-northeast-1.amazonaws.com/nginx:latest",
+    "memory": 256,
+    "memoryReservation": 128,
 		"portMappings": [
-			{
-				"hostPort": 0,
-				"protocol": "tcp",
-				"containerPort": 4567
-			}
-		],
-		"command": [
-			"bundle",
-			"exec",
-			"ruby",
-			"app.rb",
-			"-o",
-			"0.0.0.0"
-		],
+    	{
+    		"containerPort": 80,
+    		"hostPort": 0,
+    		"protocol": "tcp"
+    	}
+    ],
+		"essential": true,
+		"environment": [],
+		"mountPoints": [
+    	{
+    		"sourceVolume": "sockets",
+    		"containerPath": "/app/tmp/sockets"
+    	}
+    ],
+		"volumesFrom": [],
+    "privileged": false,
+    "readonlyRootFilesystem": false,
 		"logConfiguration": {
 			"logDriver": "awslogs",
 			"options": {
@@ -27,25 +29,79 @@
 				"awslogs-region": "ap-northeast-1",
 				"awslogs-stream-prefix": "service"
 			}
-		},
+		}
+	},
+
+	{
+		"name": "rails",
+		"image": "706169056500.dkr.ecr.ap-northeast-1.amazonaws.com/rails:latest",
+    "memory": 512,
+    "memoryReservation": 300,
+		"portMappings": [
+    	{
+    		"containerPort": 3000,
+    		"hostPort": 0,
+    		"protocol": "tcp"
+    	}
+    ],
+		"essential": true,
+		"command": [
+    	"bundle",
+    	"exec",
+    	"puma",
+    	"-C",
+    	"config/puma.rb"
+    ],
 		"environment": [],
 		"secrets": [
 			{
-				"name": "DB_HOST",
-				"valueFrom": "DB_HOST"
+				"name": "RAILS_MASTER_KEY",
+				"valueFrom": "RAILS_MASTER_KEY"
 			},
 			{
-				"name": "DB_USER",
-				"valueFrom": "DB_USER"
+				"name": "AWS_ACCESS_KEY_ID",
+				"valueFrom": "ACCESS_KEY_ID"
 			},
 			{
-				"name": "DB_PASSWORD",
-				"valueFrom": "DB_PASSWORD"
+				"name": "AWS_SECRET_ACCESS_KEY",
+				"valueFrom": "SECRET_ACCESS_KEY"
 			},
-			{
-				"name": "RACK_ENV",
-				"valueFrom": "RACK_ENV"
-			}
-		]
+    	{
+    		"name": "RAILS_ENV",
+    		"valueFrom": "RAILS_ENV"
+    	},
+    	{
+    		"name": "DB_USER",
+    		"valueFrom": "DB_USER"
+    	},
+    	{
+    		"name": "DB_HOST",
+    		"valueFrom": "DB_HOST"
+    	},
+    	{
+    		"name": "DB_DATABASE",
+    		"valueFrom": "DB_DATABASE"
+    	},
+    	{
+    		"name": "DB_PASSWORD",
+    		"valueFrom": "DB_PASSWORD"
+    	}
+    ],
+		"mountPoints": [
+    	{
+    		"sourceVolume": "sockets",
+    		"containerPath": "/app/tmp/sockets"
+    	}
+    ],
+		"volumesFrom": [],
+		"workingDirectory": "/app",
+		"logConfiguration": {
+    	"logDriver": "awslogs",
+    	"options": {
+    		"awslogs-group": "sample-service",
+    		"awslogs-region": "ap-northeast-1",
+    		"awslogs-stream-prefix": "service"
+    	}
+    }
 	}
 ]

@@ -13,6 +13,26 @@ resource "aws_security_group" "instance" {
     ]
   }
 
+  ingress {
+    from_port = 22
+    to_port   = 22
+    protocol  = "TCP"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "TCP"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -36,6 +56,16 @@ resource "aws_security_group" "alb" {
     ]
   }
 
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "TCP"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -44,6 +74,7 @@ resource "aws_security_group" "alb" {
   }
 }
 
+# 手動でRDS作成後に設定する
 resource "aws_security_group" "db" {
   name        = "sample-db2"
   description = "DB"
