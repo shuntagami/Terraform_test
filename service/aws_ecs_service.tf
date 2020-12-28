@@ -12,6 +12,3 @@ resource "aws_ecs_service" "webapp-service" {
   }
 }
 
-# depends_on = [
-#   "aws_alb_listener.web_front_end",
-# ]
